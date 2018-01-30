@@ -39,6 +39,27 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then(this.placeBooksToShelfState)
   }
 
+  // Moves a `book` object to a new `newShelf`
+  updateBookShelf = (book, newShelf) => {
+    // TODO: remote calls
+    this.setState(prevState => {
+
+      if (newShelf === 'none') {
+        return; // TODO: remove
+      }
+      // Filter the old shelf to remove the `book`
+      prevState.shelves[book.shelf] = prevState.shelves[book.shelf].filter(shelfBook => (
+        shelfBook.id !== book.id
+      ));
+
+      book.shelf = newShelf; // Update `book` shelf
+      // Update `newShelf` in `state`
+      prevState.shelves[newShelf] = prevState.shelves[newShelf].concat([book])
+
+      return prevState;
+    })
+  }
+
   render() {
 
     return (
@@ -54,11 +75,14 @@ class BooksApp extends React.Component {
                 <div className="list-books-content">
                   <div>
                     <Bookshelf title="Currently Reading"
-                               books={this.state.shelves.currentlyReading} />
+                               books={this.state.shelves.currentlyReading}
+                               onShelfChange={this.updateBookShelf} />
                     <Bookshelf title="Want to Read"
-                               books={this.state.shelves.wantToRead} />
+                               books={this.state.shelves.wantToRead}
+                               onShelfChange={this.updateBookShelf} />
                     <Bookshelf title="Read"
-                               books={this.state.shelves.read} />
+                               books={this.state.shelves.read}
+                               onShelfChange={this.updateBookShelf} />
                   </div>
                 </div>
                 <div className="open-search">

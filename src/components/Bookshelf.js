@@ -12,7 +12,7 @@ function Bookshelf(props) {
 
           {props.books.map(book => (
             <li key={book.id}>
-              <Book book={book} />
+              <Book book={book} onShelfChange={props.onShelfChange} />
             </li>
           ))}
 
