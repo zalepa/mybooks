@@ -6,8 +6,8 @@ import './App.css'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 // Components
-import Search from './Search';
-import Bookshelf from './Bookshelf';
+import Search from './components/Search';
+import Bookshelf from './components/Bookshelf';
 
 class BooksApp extends React.Component {
   /*
