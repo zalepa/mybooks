@@ -1,20 +1,20 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI';
 import './App.css'
+
+// Third-Party Dependencies
 import { BrowserRouter, Route, Link } from 'react-router-dom'
+
+// Components
 import Search from './Search';
 import Bookshelf from './Bookshelf';
-import * as BooksAPI from './BooksAPI';
 
 class BooksApp extends React.Component {
+  /*
+    Component state:
+      shelves // a shelf for each book, property name is shelf name (camelcase)
+  */
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
     shelves: {
       currentlyReading: [],
       wantToRead: [],
@@ -22,16 +22,19 @@ class BooksApp extends React.Component {
     }
   }
 
+  // Sorts an array of books into shelves of `state`
+  placeBooksToShelfState = (books) => {
+    this.setState({
+      shelves: {
+        currentlyReading: books.filter(book => book.shelf === 'currentlyReading'),
+        wantToRead: books.filter(book => book.shelf === 'wantToRead'),
+        read: books.filter(book => book.shelf === 'read')
+      }
+    });
+  }
+
   componentWillMount() {
-    BooksAPI.getAll().then(books => {
-      this.setState({
-        shelves: {
-          currentlyReading: books.filter(book => book.shelf === 'currentlyReading'),
-          wantToRead: books.filter(book => book.shelf === 'wantToRead'),
-          read: books.filter(book => book.shelf === 'read')
-        }
-      });
-    })
+    BooksAPI.getAll().then(this.placeBooksToShelfState)
   }
 
   render() {
