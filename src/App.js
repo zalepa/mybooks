@@ -1,6 +1,7 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Search from './Search';
 import Bookshelf from './Bookshelf';
 import * as BooksAPI from './BooksAPI';
@@ -36,27 +37,26 @@ class BooksApp extends React.Component {
   render() {
 
     return (
-      <div className="app">
-        {this.state.showSearchPage ? (
-          <Search />
-        ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <Bookshelf title="Currently Reading" books={this.state.shelves.currentlyReading} />
-                <Bookshelf title="Want to Read" books={this.state.shelves.wantToRead} />
-                <Bookshelf title="Read" books={this.state.shelves.read} />
+      <BrowserRouter>
+          <div className="app">
+            <Route exact path="/search" component={Search}/>
+            <Route exact path="/" render={() => (
+              <div className="list-books">
+                <div className="list-books-title"><h1>MyReads</h1></div>
+                <div className="list-books-content">
+                  <div>
+                    <Bookshelf title="Currently Reading" books={this.state.shelves.currentlyReading} />
+                    <Bookshelf title="Want to Read" books={this.state.shelves.wantToRead} />
+                    <Bookshelf title="Read" books={this.state.shelves.read} />
+                  </div>
+                </div>
+                <div className="open-search">
+                  <Link to="/search">Add a book</Link>
+                </div>
               </div>
-            </div>
-            <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-            </div>
+            )} />
           </div>
-        )}
-      </div>
+      </BrowserRouter>
     )
   }
 }
