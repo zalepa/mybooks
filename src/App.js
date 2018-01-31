@@ -43,11 +43,13 @@ class BooksApp extends React.Component {
   updateBookShelf = (book, newShelf) => {
 
     this.setState(prevState => {
+      if (book.shelf !== 'none') {
+        // Filter the old shelf to remove the `book`
+        prevState.shelves[book.shelf] = prevState.shelves[book.shelf].filter(shelfBook => (
+          shelfBook.id !== book.id
+        ));
+      }
 
-      // Filter the old shelf to remove the `book`
-      prevState.shelves[book.shelf] = prevState.shelves[book.shelf].filter(shelfBook => (
-        shelfBook.id !== book.id
-      ));
 
       if (newShelf !== 'none') {
         BooksAPI.update(book, newShelf);
@@ -66,7 +68,9 @@ class BooksApp extends React.Component {
       <BrowserRouter>
           <div className="app">
 
-            <Route exact path="/search" component={Search}/>
+            <Route exact path="/search" component={() => (
+                <Search onShelfChange={this.updateBookShelf} />
+              )}/>
 
           <Route exact path="/" render={() => (
 
