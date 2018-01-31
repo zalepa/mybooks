@@ -42,7 +42,6 @@ class BooksApp extends React.Component {
   // Moves a `book` object to a new `newShelf`
   updateBookShelf = (book, newShelf) => {
 
-    // TODO: remote calls
     this.setState(prevState => {
 
       // Filter the old shelf to remove the `book`
@@ -51,11 +50,11 @@ class BooksApp extends React.Component {
       ));
 
       if (newShelf !== 'none') {
+        BooksAPI.update(book, newShelf);
         book.shelf = newShelf; // Update `book` shelf
         // Update `newShelf` in `state`
         prevState.shelves[newShelf] = prevState.shelves[newShelf].concat([book])
       }
-
 
       return prevState;
     })
