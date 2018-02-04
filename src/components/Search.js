@@ -4,7 +4,6 @@ import Book from './Book';
 
 class Search extends Component {
   render() {
-    console.log(`Rendering SEARCH`);
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -16,13 +15,15 @@ class Search extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {this.props.searchResults.map(book => (
-              <li key={book.id}>
-                <Book book={book} onShelfChange={this.props.onShelfChange} />
-              </li>
-            ))}
-          </ol>
+          {this.props.searchResults.length > 0 &&
+            <ol className="books-grid">
+              {this.props.searchResults.map(book => (
+                <li key={book.id}>
+                  <Book book={book} onShelfChange={this.props.onShelfChange} />
+                </li>
+              ))}
+            </ol>
+          }
         </div>
       </div>
     )

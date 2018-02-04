@@ -26,23 +26,38 @@ class BooksApp extends React.Component {
       if (newShelf === 'none') { // remove item
         prevState.books = prevState.books.filter(b => b.id !== book.id)
       } else { // map through books and find the matching one, update shelf
-        prevState.books = prevState.books.map(b => {
-          if (b.id === book.id) {
-            b.shelf = newShelf
-          }
-          return b
-        })
+
+        if (book.shelf === 'none') {
+          book.shelf = newShelf;
+          prevState.books = prevState.books.concat([book])
+        } else {
+          prevState.books = prevState.books.map(b => {
+            if (b.id === book.id) {
+              b.shelf = newShelf
+            }
+            return b
+          })
+        }
+
         BooksAPI.update(book, newShelf);
       }
     })
   }
 
   searchAPI = (q) => {
-    console.log(`Searching for ${q}...`);
     BooksAPI.search(q).then(searchResults => {
-      this.setState({
-        searchResults
-      })
+      if (!searchResults.error) {
+        // Add shelves
+        searchResults.map(book => {
+          book.shelf = 'none'; // default shelf
+          const match = this.state.books.find(b => b.id === book.id)
+          if (match) {
+            book.shelf = match.shelf;
+          }
+          return book;
+        })
+        this.setState({ searchResults })
+      }
     })
   }
 
