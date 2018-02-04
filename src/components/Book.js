@@ -1,6 +1,9 @@
 import React from 'react';
 
 function Book(props)  {
+  if (!props.book.imageLinks) {
+    props.book.imageLinks = {};
+  }
   return (
     <div className="book">
       <div className="book-top">

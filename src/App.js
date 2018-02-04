@@ -12,7 +12,8 @@ import Bookshelf from './components/Bookshelf';
 class BooksApp extends React.Component {
 
   state = {
-    books: []
+    books: [],
+    searchResults: []
   }
 
   componentWillMount() {
@@ -36,14 +37,26 @@ class BooksApp extends React.Component {
     })
   }
 
+  searchAPI = (q) => {
+    console.log(`Searching for ${q}...`);
+    BooksAPI.search(q).then(searchResults => {
+      this.setState({
+        searchResults
+      })
+    })
+  }
+
   render() {
 
     return (
       <BrowserRouter>
           <div className="app">
 
-            <Route exact path="/search" component={() => (
-                <Search books={this.state.books} onShelfChange={this.updateBookShelf} />
+            <Route exact path="/search" render={(route) => (
+                <Search history={route.history}
+                        searchResults={this.state.searchResults}
+                        onShelfChange={this.updateBookShelf}
+                        onQueryChange={this.searchAPI}/>
               )}/>
 
           <Route exact path="/" render={() => (
