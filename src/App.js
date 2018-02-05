@@ -1,44 +1,36 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI';
 import './App.css'
-
-// Third-Party Dependencies
 import { BrowserRouter, Route, Link } from 'react-router-dom'
-
-// Components
 import Search from './components/Search';
 import Bookshelf from './components/Bookshelf';
 
 class BooksApp extends React.Component {
-
   state = {
     books: [],
     searchResults: []
   }
 
   componentWillMount() {
-    BooksAPI.getAll().then(books => this.setState({ books }))
+    BooksAPI.getAll().then(books => this.setState({ books }));
   }
 
-  // Moves a `book` object to a new `newShelf`
   updateBookShelf = (book, newShelf) => {
     this.setState(prevState => {
       if (newShelf === 'none') { // remove item
-        prevState.books = prevState.books.filter(b => b.id !== book.id)
-      } else { // map through books and find the matching one, update shelf
-
+        prevState.books = prevState.books.filter(b => b.id !== book.id);
+      } else {
         if (book.shelf === 'none') {
           book.shelf = newShelf;
-          prevState.books = prevState.books.concat([book])
+          prevState.books = prevState.books.concat([book]);
         } else {
           prevState.books = prevState.books.map(b => {
             if (b.id === book.id) {
-              b.shelf = newShelf
+              b.shelf = newShelf;
             }
-            return b
+            return b;
           })
         }
-
         BooksAPI.update(book, newShelf);
       }
     })
@@ -47,22 +39,20 @@ class BooksApp extends React.Component {
   searchAPI = (q) => {
     BooksAPI.search(q).then(searchResults => {
       if (!searchResults.error) {
-        // Add shelves
         searchResults.map(book => {
-          book.shelf = 'none'; // default shelf
-          const match = this.state.books.find(b => b.id === book.id)
+          book.shelf = 'none';
+          const match = this.state.books.find(b => b.id === book.id);
           if (match) {
             book.shelf = match.shelf;
           }
           return book;
         })
-        this.setState({ searchResults })
+        this.setState({ searchResults });
       }
     })
   }
 
   render() {
-
     return (
       <BrowserRouter>
           <div className="app">
